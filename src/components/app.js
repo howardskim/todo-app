@@ -3,6 +3,12 @@ import React, {Component} from 'react';
 import TodoList from './todo_list';
 import AddItem from './add_item';
 import listData from '../data/todo';
+import axios from 'axios'
+
+
+const BASE_URL = 'http://api.reactprototypes.com'
+const API_KEY = '?key=thisismyapikey_69';
+
 //need to change to a class component
 
 class App extends Component {
@@ -17,21 +23,45 @@ class App extends Component {
         this.getListData();
     }
     
-    addItem = (item) => {
-        item._id = new Date().getTime();
+    //asynchronous function
+    addItem = async (item) => {
+        try{
+            if(!item.title){
+                throw new Error('Missing Title')
+            }
+            if(!item.details){
+                throw new Error('Missing details')
+            }
+            await axios.post(`${BASE_URL}/todos${API_KEY}`, item);
+            this.getListData();
+        } catch(error){
+            console.log('something went wrong', error.message)
+        }
+    }
+    getListData = async () => {
+        const response = await axios.get(`${BASE_URL}/todos${API_KEY}`);
         this.setState({
-            //item goes on top because of this order
-            items: [item, ...this.state.items]
+            items: response.data.todos
         })
     }
 
-    getListData(){
-        //This is where you would call the server for your data
+    // getListData(){
+    //     //This is where you would call the server for your data
+    //     //axios.what type of request u want and it is a function
+    //     //parameter is where you want to get the data from 
+    //     //? means there will be key value pairs in the query string
+    //     //?=value and multiple key value pairs are separated by '&'
+    //     //promise is a way to handle asynchronous operations; once asynch operations are completed;
+    //     //do this thing...THEN do this...just like success in ajax, a function goes into this then parameter
+    //     axios.get(`${BASE_URL}/todos${API_KEY}`).then((response) => {
+    //         this.setState({
+    //             items: response.data.todos
+    //         })
+    //     }).catch((error) => {
+    //         console.log(error.message);
+    //     })
+    // }
 
-        this.setState({
-            items: listData
-        })
-    }
     render(){
         console.log(this.state.items)
         return (
