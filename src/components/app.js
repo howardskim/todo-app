@@ -21,9 +21,10 @@ class App extends Component {
             items: [],
         }
     }
-    componentDidMount(){
-        this.getListData();
-    }
+    //delete this since we need to use it in home.js instead of app.js
+    // componentDidMount(){
+    //     this.getListData();
+    // }
     
     //asynchronous function
     addItem = async (item) => {
@@ -67,11 +68,11 @@ class App extends Component {
     render(){
         //render prop takes a function like how component takes a function and we can define it. but we need to pass the routing props as the argument
         //use render, give it a callback, pass in routing props as argument; you can use exact component = {(props) => {} } but use RENDER it works because component takes a component. the thing below is actually a functional component which takes props as an argument and returns some jsx
-        console.log('todo list', this.state.items)
+        // console.log('todo list', this.state.items)
         return (
         <div className="container">
                 <Route exact path="/" render={(props)=>{
-                    return <Home add={this.addItem} list={this.state.items} {...props}/>
+                    return <Home add={this.addItem} list={this.state.items} getList = {this.getListData.bind(this)} {...props}/>
                 }}/>
         </div>
         );

@@ -4,8 +4,11 @@ import TodoList from './todo_list';
 import AddItem from './add_item';
 
 class Home extends Component {
+    componentDidMount(){
+        this.props.getList();
+    }
     render(){
-        console.log(this.props);
+        // console.log(this.props);
         const {add, list} = this.props;
 
         return (
