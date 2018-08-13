@@ -1,0 +1,9 @@
+.not-found{
+    height: 100vh;
+    display: flex;
+}
+
+.not-found .not-found-container {
+    margin: auto;
+}
+
