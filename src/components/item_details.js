@@ -5,9 +5,7 @@ import axios from 'axios';
 
 class ItemDetails extends Component{
     state = {
-        itemDetails: {
-
-        }
+        itemDetails: null
     }
     async componentDidMount(){
         console.log(this.props.match.params);
@@ -20,11 +18,21 @@ class ItemDetails extends Component{
             itemDetails: resp.data.todo
         })
     }
+    async handleDelete(){
+        console.log(this.props.history);
+        console.log(this.state.itemDetails._id)
+       await this.props.delete(this.state.itemDetails._id);
+    
+       // push into where you want to navigate to... programitcally rerouting somewhere..
+       //if the function has an await in front of it, it will automatically return a promise
+       this.props.history.push('/');
+    }
     render(){
         const {itemDetails} = this.state;
         console.log(itemDetails);
+
         if(!itemDetails){
-            return <h1 className="grey-text">Loading...</h1>
+            return (<h1 className="grey-text">Loading...</h1>)
         }
         return(
             <div>
@@ -35,6 +43,14 @@ class ItemDetails extends Component{
                     </div>
                 </div>
                 <h4><em>Title: </em>{itemDetails.title}</h4>
+                <div className="row">
+                    <div className="col s6 center">
+                        <button className="btn green">Toggle Complete</button>
+                    </div>
+                    <div className="col s6 center">
+                        <button onClick={this.handleDelete.bind(this)}className="btn orange">Delete</button>
+                    </div>
+                </div>
             </div>
         )
     }
