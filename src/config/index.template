@@ -1,0 +1,6 @@
+export default {
+    api: {
+        BASE_URL: '<API URL>',
+        API_KEY: '<API KEY>'
+    }
+}

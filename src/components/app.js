@@ -2,14 +2,17 @@ import 'materialize-css/dist/css/materialize.min.css';
 import React, {Component} from 'react';
 
 //to define the route, we need to import it
-import {Route} from 'react-router-dom';
-import TodoList from './todo_list';
-import AddItem from './add_item';
+import {Route, Switch} from 'react-router-dom';
+// import TodoList from './todo_list';
+// import AddItem from './add_item';
 import axios from 'axios'
 import Home from './home';
+import NotFound from './404';
+import ItemDetails from './item_details';
+import config from '../config';
 
-const BASE_URL = 'http://api.reactprototypes.com'
-const API_KEY = '?key=thisismyapikey_69';
+// const BASE_URL = 'http://api.reactprototypes.com'
+// const API_KEY = '?key=thisismyapikey_69';
 
 //need to change to a class component
 
@@ -28,6 +31,9 @@ class App extends Component {
     
     //asynchronous function
     addItem = async (item) => {
+        // const {api: {BASE_URL, API_KEY}} = config;
+
+        const {BASE_URL, API_KEY} = config.api;
         try{
             if(!item.title){
                 throw new Error('Missing Title')
@@ -41,14 +47,18 @@ class App extends Component {
             console.log('something went wrong', error.message)
         }
     }
-    getListData = async () => {
-        const response = await axios.get(`${BASE_URL}/todos${API_KEY}`);
-        this.setState({
-            items: response.data.todos
-        })
-    }
+    // getListData = async () => {
+    //     const { BASE_URL, API_KEY } = config.api;
+
+    //     const response = await axios.get(`${BASE_URL}/todos${API_KEY}`);
+    //     this.setState({
+    //         items: response.data.todos
+    //     })
+    // }
 
     getListData(){
+        const { BASE_URL, API_KEY } = config.api;
+
         //This is where you would call the server for your data
         //axios.what type of request u want and it is a function
         //parameter is where you want to get the data from 
@@ -69,11 +79,16 @@ class App extends Component {
         //render prop takes a function like how component takes a function and we can define it. but we need to pass the routing props as the argument
         //use render, give it a callback, pass in routing props as argument; you can use exact component = {(props) => {} } but use RENDER it works because component takes a component. the thing below is actually a functional component which takes props as an argument and returns some jsx
         // console.log('todo list', this.state.items)
+        
         return (
         <div className="container">
-                <Route exact path="/" render={(props)=>{
-                    return <Home add={this.addItem} list={this.state.items} getList = {this.getListData.bind(this)} {...props}/>
-                }}/>
+            <Switch>
+                <Route exact path="/" render={(props) => {
+                    return <Home add={this.addItem} list={this.state.items} getList={this.getListData.bind(this)} {...props} />
+                }} />
+                <Route path="/item-details/:item_id" component ={ItemDetails} />
+                <Route component={NotFound}/>
+            </Switch>
         </div>
         );
     }
