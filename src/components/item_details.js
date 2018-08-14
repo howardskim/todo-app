@@ -8,7 +8,6 @@ class ItemDetails extends Component{
         itemDetails: null
     }
     async componentDidMount(){
-        console.log(this.props.match.params);
         const{item_id} = this.props.match.params;
         const {BASE_URL, API_KEY} = config.api;
 
@@ -27,9 +26,17 @@ class ItemDetails extends Component{
        //if the function has an await in front of it, it will automatically return a promise
        this.props.history.push('/');
     }
+    async handleToggleComplete(){
+        const todoItem = await this.props.toggleComplete(this.state.itemDetails._id);
+
+        console.log('item details toggle complete response: ', todoItem);
+        this.setState({
+            itemDetails: todoItem
+        })
+    }
     render(){
         const {itemDetails} = this.state;
-        console.log(itemDetails);
+        console.log('item details>>>>>> ', itemDetails);
 
         if(!itemDetails){
             return (<h1 className="grey-text">Loading...</h1>)
@@ -42,10 +49,18 @@ class ItemDetails extends Component{
                         <Link to="/" className="btn red darken-4">Back to List</Link>
                     </div>
                 </div>
-                <h4><em>Title: </em>{itemDetails.title}</h4>
+                <h4 className="center"> Title: {itemDetails.title}</h4>
+                <h5 className="center">Details: {itemDetails.details}</h5>
+                <h5>
+                    {
+                        itemDetails.complete
+                            ? 'Item Complete'
+                            : 'Item is not yet complete'
+                    }
+                </h5>
                 <div className="row">
                     <div className="col s6 center">
-                        <button className="btn green">Toggle Complete</button>
+                        <button onClick={this.handleToggleComplete.bind(this)} className="btn green">Toggle Complete</button>
                     </div>
                     <div className="col s6 center">
                         <button onClick={this.handleDelete.bind(this)}className="btn orange">Delete</button>

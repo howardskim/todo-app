@@ -54,15 +54,28 @@ class App extends Component {
     //     })
     // }
 
+
+    //different axios methods -- 'this is a get request, a put request, etc' still all a request; it allows us to use the same URL to do different things on the server
+    // post request doesnt have to only add data to the server..! 
+
     async deleteItem(id){
         const { BASE_URL, API_KEY } = config.api;
         try{
             const resp = await axios.delete(`${BASE_URL}/todos/${id + API_KEY}`);
-            console.log('resp: ', resp)
         } catch (error){
             console.log('error: ', error);
         }
 
+    }
+    async toggleItemComplete(id){
+        const { BASE_URL, API_KEY } = config.api;
+        try {
+            const resp = await axios.put(`${BASE_URL}/todos/${id + API_KEY}`);
+            console.log(resp);
+            return resp.data.todo;
+        } catch (error){
+            console.log('toggle complete error', error.message);
+        }
     }
 
     getListData(){
@@ -100,7 +113,7 @@ class App extends Component {
                 <Route 
                     path="/item-details/:item_id" 
                     render= {(routeProps) => {
-                        return <ItemDetails delete = {this.deleteItem.bind(this)} {...routeProps}/>
+                        return <ItemDetails toggleComplete ={this.toggleItemComplete.bind(this)} delete = {this.deleteItem.bind(this)} {...routeProps}/>
                     }} 
                 />
                 <Route component={NotFound}/>
